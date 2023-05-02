@@ -7,6 +7,6 @@ router = APIRouter(
 )
 
 
-@router.get("/")
+@router.get("")
 def get(current_user: str = Depends(oauth2.get_current_user)):
     return "protected route"

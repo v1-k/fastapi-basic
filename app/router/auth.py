@@ -10,7 +10,7 @@ router = APIRouter(
 )
 
 
-@router.post("/register", status_code=status.HTTP_201_CREATED, response_model=schema.UsersResponse)
+@router.post("/register", status_code=status.HTTP_201_CREATED, response_model=schema.AccessToken)
 def register(user: schema.UserRegister):
     db = database.users
     if user.username in db.get():
@@ -24,7 +24,11 @@ def register(user: schema.UserRegister):
                             id=id,
                             created_at=created_at)
     db.set(new_user)
-    return new_user
+    access_token = oauth2.create_access_token(
+        data={"username": user.username})
+    new_token = schema.AccessToken(username=user.username,
+                                   access_token=access_token, token_type="bearer")
+    return new_token
 
 
 @router.post('/login', response_model=schema.AccessToken)
@@ -35,6 +39,6 @@ def login(user_credentials: OAuth2PasswordRequestForm = Depends()):
             status_code=status.HTTP_403_FORBIDDEN, detail=f"Invalid Credentials")
     access_token = oauth2.create_access_token(
         data={"username": user_credentials.username})
-    new_token = schema.AccessToken(
-        access_token=access_token, token_type="bearer")
+    new_token = schema.AccessToken(username=user_credentials.username,
+                                   access_token=access_token, token_type="bearer")
     return new_token

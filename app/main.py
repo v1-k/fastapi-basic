@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .router import auth, protected,  public
+from .router import auth, protected,  public, tasks
 
 app = FastAPI()
 
@@ -17,3 +17,4 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(protected.router)
 app.include_router(public.router)
+app.include_router(tasks.router)
