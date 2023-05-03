@@ -10,6 +10,7 @@ class UserRegister(BaseModel):
 
 class Users(UserRegister):
     id: int
+
     created_at: Optional[datetime] = None
 
 

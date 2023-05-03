@@ -10,13 +10,13 @@ router = APIRouter(
 )
 
 
-@router.post('/new', response_model=schema.TaskResult)
+@router.post('/new', status_code=status.HTTP_201_CREATED, response_model=schema.TaskResult)
 async def run_task(current_user: str = Depends(oauth2.get_current_user)):
     task_id = background_task.delay(1, 2)
     return {'task_id': str(task_id), 'status': 'Processing', 'result': None}
 
 
-@router.get('/result/{task_id}', response_model=schema.TaskResult)
+@router.get('/result/{task_id}', status_code=status.HTTP_200_OK, response_model=schema.TaskResult)
 async def fetch_result(task_id: str, current_user: str = Depends(oauth2.get_current_user)):
     task = AsyncResult(task_id)
     if not task.ready():

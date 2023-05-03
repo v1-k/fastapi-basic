@@ -5,6 +5,5 @@ import time
 
 @app.task
 def background_task(x, y):
-    # sleep 10 seconds
-    time.sleep(10)
+
     return x + y
